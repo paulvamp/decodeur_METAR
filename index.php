@@ -100,7 +100,7 @@ function analyserMETAR($metar){
     $date = transformeDate($mots[1]);
     $auto=0;
     if($mots[2]!="AUTO"){
-        die($mots[2]);
+        //die($mots[2]);
         //On verifie si après il y a du vent variable 
         if(isset($mots[3]) && preg_match("/(\d{3})V(\d{3})/", $mots[3])){
             $vent = transformeVent($mots[2]." ".$mots[3]);
@@ -110,7 +110,7 @@ function analyserMETAR($metar){
         }
         //$vent = transformeVent($mots[2]);
     } else {
-        die($mots[2]."//".$mots[3]."//".$mots[4]);
+        //die($mots[2]."//".$mots[3]."//".$mots[4]);
         //$vent = transformeVent($mots[3]);
         if(isset($mots[4]) && preg_match("/(\d{3})V(\d{3})/", $mots[4])){
             $vent = transformeVent($mots[3]." ".$mots[4]);
