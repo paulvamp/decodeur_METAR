@@ -1,26 +1,26 @@
 <?php
 $grands_aeroports = [
     // Nord (Hauts-de-France)
-    "LFQQ" => "Lille Lesquin",
-    "LFAC" => "Calais Dunkerque",
-    "LFBK" => "Saint-Quentin Roupy",
+    "LFQQ" => "LFQQ - Lille Lesquin",
+    "LFAC" => "LFAC - Calais Dunkerque",
+    "LFBK" => "LFBK - Saint-Quentin Roupy",
     // Grandes Villes & Hubs
-    "LFPG" => "Paris Charles de Gaulle",
-    "LFPO" => "Paris Orly",
-    "LFPB" => "Le Bourget",
-    "LFMN" => "Nice Côte d'Azur",
-    "LFLL" => "Lyon Saint-Exupéry",
-    "LFML" => "Marseille Provence",
-    "LFBO" => "Toulouse Blagnac",
-    "LFBD" => "Bordeaux Mérignac",
-    "LFRS" => "Nantes Atlantique",
-    "LFST" => "Strasbourg Entzheim",
-    "LFMT" => "Montpellier Méditerranée",
+    "LFPG" => "LFPG - Paris Charles de Gaulle",
+    "LFPO" => "LFPO - Paris Orly",
+    "LFPB" => "LFPB - Le Bourget",
+    "LFMN" => "LFMN - Nice Côte d'Azur",
+    "LFLL" => "LFLL - Lyon Saint-Exupéry",
+    "LFML" => "LFML - Marseille Provence",
+    "LFBO" => "LFBO - Toulouse Blagnac",
+    "LFBD" => "LFBD - Bordeaux Mérignac",
+    "LFRS" => "LFRS - Nantes Atlantique",
+    "LFST" => "LFST - Strasbourg Entzheim",
+    "LFMT" => "LFMT - Montpellier Méditerranée",
     // Capitales proches
-    "EBBR" => "Bruxelles National",
-    "LSGG" => "Genève Cointrin",
-    "EGLL" => "Londres Heathrow",
-    "LEMD" => "Madrid Barajas"
+    "EBBR" => "EBBR - Bruxelles National",
+    "LSGG" => "LSGG - Genève Cointrin",
+    "EGLL" => "EGLL - Londres Heathrow",
+    "LEMD" => "LEMD - Madrid Barajas"
 ];
 
 $metar_brut = "";
