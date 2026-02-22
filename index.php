@@ -17,6 +17,7 @@ if (isset($_POST['oaci'])) {
             $lines = explode("\n", trim($raw_data));
             if (isset($lines[1])) {
                 $metar_brut = $lines[1];
+                $info=analyserMETAR($metar_brut);
             } else {
                 $error = "Format de fichier invalide pour $oaci.";
             }
@@ -28,25 +29,89 @@ if (isset($_POST['oaci'])) {
     }
 
 
-    $info=analyserMETAR($metar_brut);
     
 }
-
 
 function analyserMETAR($metar){
     //Analyser le METAR et retourner une description lisible
     //Cette fonction est un exemple très basique et ne couvre pas tous les cas possibles
+    $mots = explode(" ", $metar);
+    // Résultat :
+    // $mots[0] est "LFPG"
+    // $mots[1] est "221300Z"
+    // $mots[2] est "24010KT"
+    $aeroport = $mots[0];
+    $date = transformeDate($mots[1]);
+    if($mots[2]!="AUTO"){
+        $vent = transformeVent($mots[2]);
+    } else {
+        $vent = transformeVent($mots[3]);
+    }
+    $temp = recupTemperature($metar);
+
+
+
+
+
+
+
+    
+}
+
+
+
+function recupTemperature($metar){
     $result = "";
     //Exemple d'analyse pour la température
-    if (preg_match("/T(\d{2})(\d{2})/", $metar, $matches)) {
-        $temp = intval($matches[1]);
-        $dewpoint = intval($matches[2]);
-        $result .= "Température: $temp°C, Point de rosée: $dewpoint°C\n";
-
+    if (preg_match("/\s(M?\d{2})\/(M?\d{2})\s/", $metar, $matches)) {
+        $temp = str_replace('M', '-', $matches[1]);
+        $dewpoint = str_replace('M', '-', $matches[2]);
+        $temp = intval($temp);
+        $dewpoint = intval($dewpoint);
+        $result .= "Température: $temp °C, Point de rosée: $dewpoint °C\n";
     }
     //Ajouter d'autres analyses pour le vent, la visibilité, etc.
     return nl2br($result);
 }
+
+
+function transformeDate($date_str){
+    //Exemple de transformation de la date du METAR
+    //221300Z -> 22 du mois à 13h00 UTC
+    if (preg_match("/(\d{2})(\d{2})(\d{2})Z/", $date_str, $matches)) {
+        $day = $matches[1];
+        $hour = $matches[2];
+        $minute = $matches[3];
+        return "Le $day à $hour:$minute UTC";
+    }
+    return "Date inconnue";
+}
+
+
+function transformeVent($vent_str){
+    //Exemple de transformation du vent du METAR
+    //24010KT -> Vent de 240° à 10 nœuds
+    if (preg_match("/(\d{3})(\d{2})KT/", $vent_str, $matches)) {
+        $direction = $matches[1];
+        $vitesse = $matches[2];
+        return "Vent de $direction° à $vitesse nœuds";
+    }
+    return "Vent inconnu";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ?>
 
 
@@ -82,10 +147,15 @@ function analyserMETAR($metar){
         <div class="metar-box">
             <?php echo $metar_brut; ?>
         </div>
-        <h3>Informations :</h3>
-        <div class="metar-box">
-            <?php echo $info; ?>
-        </div>
+        <?php if($info!=""){
+            //Si il y a des infos on affiche sinon non 
+            echo'
+            <h3>Informations :</h3>
+            <div class="metar-box">
+                <?php echo $info; ?>
+            </div>';
+        }
+        ?>
         
         <?php endif; ?>
 </div>
