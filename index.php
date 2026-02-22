@@ -120,11 +120,11 @@ function rechercheNuages($metar){
     //Exemple de recherche de nuages dans le METAR
     //FEW020 -> Quelques nuages à 2000 pieds
     $result = "";
-    if (preg_match("/(FEW|SCT|BKN|OVC)(\d{3})/", $metar, $matches)) {
-        die($matches);
-        for ($i = 0; $i < count($matches); $i++) {    
-            $type = $matches[1];
-            $altitude = $matches[2] * 100; // Convertir en pieds
+    if (preg_match_all("/(FEW|SCT|BKN|OVC)(\d{3})/", $metar, $matches)) {
+        print_r($matches);
+        for ($i = 0; $i < count($matches[0]); $i++) {    
+            $type = $matches[1][$i];
+            $altitude = $matches[2][$i] * 100; // Convertir en pieds
             switch ($type) {
                 case "FEW": $result .= "Quelques nuages à "; break;
                 case "SCT": $result .= "Nuages épars à "; break;
