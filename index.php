@@ -192,26 +192,32 @@ function transformeVent($vent_str){
     if ($vent_str == "/////KT") return "Calme";
     $dephasage=0;
     global $V;
+    $res="";
     if (preg_match("/([0-9]{3}|VRB)(\d{2})(G\d{2})?KT\s?((\d{3})V(\d{3}))?/", $vent_str, $matches)) {
         if($matches[1]=="VRB"){
             $direction="Variable";
+            $res="Vent variable";
         } else {
             $direction = $matches[1];
+            $res="$direction °";
         }
         
-        $vitesse = intval($matches[2]);
+        $vitesse = intval($matches[2]); 
         $vitesse_kmh = round($vitesse * 1.852);
+        $res.=" à $vitesse noeuds ($vitesse_kmh km/h)";
         if(!empty($matches[3])){
             $rafale = str_replace('G', '', $matches[3]);
+            $res.= " (rafale à $rafale KT)"; 
         }
         $V=0;
         if (!empty($matches[5]) && !empty($matches[6])) {
             $direction_min= $matches[5];
             $direction_max=$matches[6]; 
             $varia_txt = "<br>Vent variable entre {$matches[5]}° et {$matches[6]}°";
+            $res.=$varia_txt;
             $V=1;
         }
-        return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)".(!empty($matches[3]) ? " (rafale: $rafale noeuds)" : "").(!empty($matches[5]) && !empty($matches[6]) ? $varia_txt : "");
+        return $res;
     }
     return "Vent inconnu (Brut: $vent_str)";
 }
