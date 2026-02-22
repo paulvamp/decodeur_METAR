@@ -1,5 +1,5 @@
 <?php
-$grands_aeroports = [
+global $grands_aeroports = [
     // Nord (Hauts-de-France)
     "LFQQ" => "LFQQ - Lille Lesquin",
     "LFAC" => "LFAC - Calais Dunkerque",
