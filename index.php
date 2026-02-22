@@ -63,14 +63,18 @@ function analyserMETAR($metar){
     $date = transformeDate($mots[1]);
     $auto=0;
     if($mots[2]!="AUTO"){
+        die($mots[2]);
         $vent = transformeVent($mots[2]);
         if($V){
-            $phi=1;
+            $phi+=1;
         }
     } else {
         $vent = transformeVent($mots[3]);
+        if($V){
+            $phi+=1;
+        }
         $auto=1; 
-        $phi=1;
+        $phi+=1;
     }
     $visibilite = intval($mots[3+$phi]);
     $nuages = rechercheNuages($metar);
@@ -89,7 +93,7 @@ function analyserMETAR($metar){
         if($auto){
             echo "Automatique<br>";
         }
-        echo "<strong>Aéroport :</strong> $aeroport (".($grands_aeroports[$aeroport] ?? "Inconnu").")<br>";
+        echo "<strong>Aéroport :</strong> $aeroport ($grands_aeroports[$aeroport])<br>";
         echo "<strong>Date :</strong> $date <br>";
         echo "<strong>Vent :</strong> $vent <br>";
         echo "<strong>Température :</strong> $temp <br>";
@@ -138,6 +142,7 @@ function transformeVent($vent_str){
     //24010KT -> Vent de 240° à 10 nœuds
     if ($vent_str == "/////KT") return "Calme";
 
+    global $V;
     if (preg_match("/(\d{3})(\d{2})(G\d{2})?KT ((\d{3})V(\d{3}))?/", $vent_str, $matches)) {
         if($matches[1]=="VRB"){
             $direction="Variable";
@@ -150,10 +155,11 @@ function transformeVent($vent_str){
         if(!empty($matches[3])){
             $rafale = str_replace('G', '', $matches[3]);
         }
+        $V=0;
         if(!empty($matches[4]) && !empty($matches[5])){
             $direction_min= $matches[4];
             $direction_max=$matches[5]; 
-            $V=1;
+            $V=1; // Il y a du vent variable
             $direction = "Variable entre $direction_min° et $direction_max°";
         }
         return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)".(!empty($matches[3]) ? " (rafale: $rafale noeuds)" : "").(!empty($matches[5]) && !empty($matches[4]) ? "<br> Vent variable du $direction_min ° au $direction_max °" : "");
