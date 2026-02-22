@@ -269,7 +269,7 @@ function rechercheVisi($metar){
 
 function rechercherQNH($metar){
     if (preg_match_all("/Q(\d{4})/", $metar, $matches)) {
-        return $matches[0][0];
+        return str_replace('Q', '', $matches[0][0]);
     }
 
 
