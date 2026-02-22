@@ -28,7 +28,7 @@ if (isset($_POST['oaci'])) {
     }
 
 
-    analyserMETAR($metar_brut);
+    $info=analyserMETAR($metar_brut);
     
 
 }
@@ -82,6 +82,10 @@ function analyserMETAR(metar){
         <h3>METAR :</h3>
         <div class="metar-box">
             <?php echo $metar_brut; ?>
+        </div>
+        <h3>Informations :</h3>
+        <div class="metar-box">
+            <?php echo $info; ?>
         </div>
         
         <?php endif; ?>
