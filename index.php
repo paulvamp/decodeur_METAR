@@ -67,7 +67,7 @@ function analyserMETAR($metar){
         $vent = transformeVent($mots[3]);
         $phi=1;
     }
-    $visibilite = $mots[3+$phi];
+    $visibilite = intval($mots[3+$phi]);
     $nuages=rechercheNuages($metar);
     $temp = recupTemperature($metar);
 
@@ -86,9 +86,8 @@ function analyserMETAR($metar){
         echo "<strong>Température :</strong> $temp <br>";
         if($visibilite=="9999"){
             $visibilite="10 km ou plus";
-        }else{
-            echo "<strong>Visibilité :</strong> $visibilite km<br>";
         }
+        echo "<strong>Visibilité :</strong> $visibilite km<br>";
         echo "<strong>Nuages :</strong> $nuages <br>";
     echo '</div>';
 
