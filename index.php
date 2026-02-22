@@ -61,8 +61,10 @@ function analyserMETAR($metar){
     //die($metar);
     $aeroport = $mots[0];
     $date = transformeDate($mots[1]);
+    $auto=0;
     if($mots[2]!="AUTO"){
         $vent = transformeVent($mots[2]);
+        $auto=1; 
     } else {
         $vent = transformeVent($mots[3]);
         $phi=1;
@@ -70,7 +72,7 @@ function analyserMETAR($metar){
     $visibilite = intval($mots[3+$phi]);
     $nuages=rechercheNuages($metar);
     $temp = recupTemperature($metar);
-
+    $pression="Non analysée (ex: Q1013 ou A2992)";
 
 
 
@@ -80,6 +82,9 @@ function analyserMETAR($metar){
 
 
     echo'<h3>Informations :</h3> <div class="info-box">';
+        if($auto){
+            echo "Automatique";
+        }
         echo "<strong>Aéroport :</strong> $aeroport <br>";
         echo "<strong>Date :</strong> $date <br>";
         echo "<strong>Vent :</strong> $vent <br>";
@@ -103,7 +108,7 @@ function recupTemperature($metar){
         $dewpoint = str_replace('M', '-', $matches[2]);
         $temp = intval($temp);
         $dewpoint = intval($dewpoint);
-        $result .= "Température: $temp °C \n<strong>Point de rosée </strong>: $dewpoint °C\n";
+        $result .= "Température: $temp °C \n<strong>Point de rosée </strong>: $dewpoint °C";
     }
     //Ajouter d'autres analyses pour le vent, la visibilité, etc.
     return nl2br($result);
@@ -127,13 +132,21 @@ function transformeDate($date_str){
 function transformeVent($vent_str){
     //Exemple de transformation du vent du METAR
     //24010KT -> Vent de 240° à 10 nœuds
-    if ($vent_str == "00000KT") return "Calme";
+    if ($vent_str == "/////KT") return "Calme";
 
-    if (preg_match("/(\d{3})(\d{2})KT/", $vent_str, $matches)) {
+    if (preg_match("/(\d{3})(\d{2})(G\d{2})?KT/", $vent_str, $matches)) {
+        if($matches[1]=="VRB"){
+            $direction="Variable";
+        } else {
+            $direction = $matches[1];
+        }
         $direction = $matches[1];
         $vitesse = $matches[2];
         $vitesse_kmh = round($vitesse * 1.852);
-        return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)";
+        if(!empty($matches[3])){
+            $rafale = str_replace('G', '', $matches[3]);
+        }
+        return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)".(!empty($matches[3]) ? " (rafale: $rafale noeuds)" : "");
     }
     return "Vent inconnu";
 }
