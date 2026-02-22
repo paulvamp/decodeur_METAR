@@ -30,7 +30,6 @@ if (isset($_POST['oaci'])) {
 
     $info=analyserMETAR($metar_brut);
     
-
 }
 
 
