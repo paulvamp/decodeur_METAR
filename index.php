@@ -134,7 +134,7 @@ function transformeVent($vent_str){
     //24010KT -> Vent de 240° à 10 nœuds
     if ($vent_str == "/////KT") return "Calme";
 
-    if (preg_match("/(\d{3})(\d{2})(G\d{2})?KT/", $vent_str, $matches)) {
+    if (preg_match("/(\d{3})(\d{2})(G\d{2})?KT (\d{3})V(\d{3})/", $vent_str, $matches)) {
         if($matches[1]=="VRB"){
             $direction="Variable";
         } else {
@@ -146,7 +146,12 @@ function transformeVent($vent_str){
         if(!empty($matches[3])){
             $rafale = str_replace('G', '', $matches[3]);
         }
-        return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)".(!empty($matches[3]) ? " (rafale: $rafale noeuds)" : "");
+        if(!empty($matches[4]) && !empty($matches[5])){
+            $direction_min= $matches[4];
+            $direction_max=$matches[5]; 
+            $direction = "Variable entre $direction_min° et $direction_max°";
+        }
+        return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)".(!empty($matches[3]) ? " (rafale: $rafale noeuds)" : "").(!empty($matches[5]) && !empty($matches[4]) ? "<br> Vent variable du $direction_min ° au $direction_max °" : "");
     }
     return "Vent inconnu";
 }
