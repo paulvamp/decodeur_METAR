@@ -121,7 +121,7 @@ function rechercheNuages($metar){
     //FEW020 -> Quelques nuages à 2000 pieds
     $result = "";
     if (preg_match("/(FEW|SCT|BKN|OVC)(\d{3})/", $metar, $matches)) {
-        for ($i = 0; $i < count($matches[0]); $i++) {    
+        for ($i = 0; $i < count($matches); $i++) {    
             $type = $matches[1][i];
             $altitude = $matches[2][i] * 100; // Convertir en pieds
             switch ($type) {
