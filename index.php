@@ -166,9 +166,9 @@ function transformeVent($vent_str){
             $direction_min= $matches[4];
             $direction_max=$matches[5]; 
             $V=1; // Il y a du vent variable
-            $direction = "Variable entre $direction_min° et $direction_max°";
+            $varia = "Vent variable entre $direction_min ° et $direction_max °";
         }
-        return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)".(!empty($matches[3]) ? " (rafale: $rafale noeuds)" : "").(!empty($matches[5]) && !empty($matches[4]) ? "<br> Vent variable du $direction_min ° au $direction_max °" : "");
+        return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)".(!empty($matches[3]) ? " (rafale: $rafale noeuds)" : "").(!empty($matches[5]) && !empty($matches[4]) ? "<br> $varia" : "");
     }
     return "Vent inconnu";
 }
