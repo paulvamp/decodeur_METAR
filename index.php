@@ -26,6 +26,27 @@ if (isset($_POST['oaci'])) {
     } else {
         $error = "Veuillez entrer un code OACI valide (ex: LFPG).";
     }
+
+
+    analyserMETAR($metar_brut);
+    
+
+}
+
+
+function analyserMETAR(metar){
+    //Analyser le METAR et retourner une description lisible
+    //Cette fonction est un exemple très basique et ne couvre pas tous les cas possibles
+    $result = "";
+    //Exemple d'analyse pour la température
+    if (preg_match("/T(\d{2})(\d{2})/", $metar, $matches)) {
+        $temp = intval($matches[1]);
+        $dewpoint = intval($matches[2]);
+        $result .= "Température: $temp°C, Point de rosée: $dewpoint°C\n";
+
+    }
+    //Ajouter d'autres analyses pour le vent, la visibilité, etc.
+    return nl2br($result);
 }
 ?>
 
@@ -58,7 +79,7 @@ if (isset($_POST['oaci'])) {
     <?php endif; ?>
 
     <?php if ($metar_brut): ?>
-        <h3>Données brutes :</h3>
+        <h3>METAR :</h3>
         <div class="metar-box">
             <?php echo $metar_brut; ?>
         </div>
