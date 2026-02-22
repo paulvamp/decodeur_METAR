@@ -1,5 +1,18 @@
 <?php
 
+
+/*
+A faire : 
+- Faire tempo et BECMG
+- Mettre la pluis et la neige dans la partie "Informations" (actuellement on ne les affiche pas)
+- Ajouter la pression (Q1013 ou A2992) dans les informations
+- 
+
+*/
+
+
+
+
 $grands_aeroports = [
     // Nord (Hauts-de-France)
     "LFQQ" => "LFQQ - Lille Lesquin",
@@ -51,6 +64,29 @@ if (isset($_POST['oaci'])) {
 }
 
 function analyserMETAR($metar){
+    $grands_aeroports = [
+        // Nord (Hauts-de-France)
+        "LFQQ" => "Lille Lesquin",
+        "LFAC" => "Calais Dunkerque",
+        "LFBK" => "Saint-Quentin Roupy",
+        // Grandes Villes & Hubs
+        "LFPG" => "Paris Charles de Gaulle",
+        "LFPO" => "Paris Orly",
+        "LFPB" => "Le Bourget",
+        "LFMN" => "Nice Côte d'Azur",
+        "LFLL" => "Lyon Saint-Exupéry",
+        "LFML" => "Marseille Provence",
+        "LFBO" => "Toulouse Blagnac",
+        "LFBD" => "Bordeaux Mérignac",
+        "LFRS" => "Nantes Atlantique",
+        "LFST" => "Strasbourg Entzheim",
+        "LFMT" => "Montpellier Méditerranée",
+        // Capitales proches
+        "EBBR" => "Bruxelles National",
+        "LSGG" => "Genève Cointrin",
+        "EGLL" => "Londres Heathrow",
+        "LEMD" => "Madrid Barajas"
+    ];
     //Analyser le METAR et retourner une description lisible
     //Cette fonction est un exemple très basique et ne couvre pas tous les cas possibles
     $mots = explode(" ", $metar);
@@ -99,29 +135,6 @@ function analyserMETAR($metar){
 
 
 
-    $grands_aeroports = [
-        // Nord (Hauts-de-France)
-        "LFQQ" => "Lille Lesquin",
-        "LFAC" => "Calais Dunkerque",
-        "LFBK" => "Saint-Quentin Roupy",
-        // Grandes Villes & Hubs
-        "LFPG" => "Paris Charles de Gaulle",
-        "LFPO" => "Paris Orly",
-        "LFPB" => "Le Bourget",
-        "LFMN" => "Nice Côte d'Azur",
-        "LFLL" => "Lyon Saint-Exupéry",
-        "LFML" => "Marseille Provence",
-        "LFBO" => "Toulouse Blagnac",
-        "LFBD" => "Bordeaux Mérignac",
-        "LFRS" => "Nantes Atlantique",
-        "LFST" => "Strasbourg Entzheim",
-        "LFMT" => "Montpellier Méditerranée",
-        // Capitales proches
-        "EBBR" => "Bruxelles National",
-        "LSGG" => "Genève Cointrin",
-        "EGLL" => "Londres Heathrow",
-        "LEMD" => "Madrid Barajas"
-    ];
 
     echo'<h3>Informations :</h3> <div class="info-box">';
         if($auto){
@@ -188,15 +201,16 @@ function transformeVent($vent_str){
         $vitesse_kmh = round($vitesse * 1.852);
         if(!empty($matches[3])){
             $rafale = str_replace('G', '', $matches[3]);
+            $dephasage=1;
         }
         $V=0;
-        if(!empty($matches[4]) && !empty($matches[5])){
-            $direction_min= $matches[4];
-            $direction_max=$matches[5]; 
+        if(!empty($matches[3+$dephasage]) && !empty($matches[4+$dephasage])){
+            $direction_min= $matches[4+$dephasage];
+            $direction_max=$matches[5+$dephasage]; 
             $V=1; // Il y a du vent variable
             $varia = "Vent variable entre $direction_min ° et $direction_max °";
         }
-        return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)".(!empty($matches[3]) ? " (rafale: $rafale noeuds)" : "").(!empty($matches[5]) && !empty($matches[4]) ? "<br> $varia" : "");
+        return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)".(!empty($matches[3]) ? " (rafale: $rafale noeuds)" : "").(!empty($matches[3+$dephasage]) && !empty($matches[4+$dephasage]) ? "<br> $varia" : "");
     }
     return "Vent inconnu";
 }
