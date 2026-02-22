@@ -26,7 +26,6 @@ if (isset($_POST['oaci'])) {
         }
     } else {
         $error = "On choisi un autre aéroport";
-        $metar_brut = getNearestMetar($oaci);
     }
 
     
@@ -45,22 +44,29 @@ function analyserMETAR($metar){
     $date = transformeDate($mots[1]);
     if($mots[2]!="AUTO"){
         $vent = transformeVent($mots[2]);
+        $phi=1;
     } else {
         $vent = transformeVent($mots[3]);
     }
+    $visibilite = $mots[3+$phi];
+    $nuages=rechercheNuages($mots);
     $temp = recupTemperature($metar);
 
 
+
+
+
+
+
+
+
     echo'<h3>Informations :</h3> <div class="info-box">';
-        echo "Aéroport : $aeroport \n";
-        echo "Date : $date \n";
-        echo "Vent : $vent \n";
-        echo "Température : $temp \n";
+        echo "Aéroport : $aeroport <br>";
+        echo "Date : $date <br>";
+        echo "Vent : $vent <br>";
+        echo "Température : $temp <br>";
+        echo "Nuages : $nuages <br>";
     echo '</div>';
-
-
-
-
 
 }
 
@@ -107,29 +113,26 @@ function transformeVent($vent_str){
     return "Vent inconnu";
 }
 
-function getNearestMetar($oaci_entre) {
-    $apiKey = "6f75e109795d4e32a08b4cb142cec532";
-    $url = "https://api.checkwx.com/metar/" . $oaci_entre . "/nearest";
 
-    $opts = [
-        "http" => [
-            "method" => "GET",
-            "header" => "X-API-Key: $apiKey\r\n"
-        ]
-    ];
-
-    $context = stream_context_create($opts);
-    $response = @file_get_contents($url, false, $context);
-
-    if ($response) {
-        $data = json_decode($response, true);
-        if (isset($data['data'][0])) {
-            return $data['data'][0]; // Retourne le METAR complet de la station la plus proche
+function rechercheNuages($metar){
+    //Exemple de recherche de nuages dans le METAR
+    //FEW020 -> Quelques nuages à 2000 pieds
+    $result = "";
+    if (preg_match("/(FEW|SCT|BKN|OVC)(\d{3})/", $metar, $matches)) {
+        for ($i = 0; $i < count($matches[0]); $i++) {    
+            $type = $matches[1][i];
+            $altitude = $matches[2][i] * 100; // Convertir en pieds
+            switch ($type) {
+                case "FEW": $result .= "Quelques nuages à "; break;
+                case "SCT": $result .= "Nuages épars à "; break;
+                case "BKN": $result .= "Ciel couvert à "; break;
+                case "OVC": $result .= "Ciel complètement couvert à "; break;
+            }
+            $result .= "$altitude pieds <br>";
         }
+        return nl2br($result);
     }
-    return false;
 }
-
 
 
 
