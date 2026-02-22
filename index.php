@@ -83,7 +83,7 @@ function analyserMETAR($metar){
 
     echo'<h3>Informations :</h3> <div class="info-box">';
         if($auto){
-            echo "Automatique";
+            echo "Automatique<br>";
         }
         echo "<strong>Aéroport :</strong> $aeroport <br>";
         echo "<strong>Date :</strong> $date <br>";
@@ -134,7 +134,7 @@ function transformeVent($vent_str){
     //24010KT -> Vent de 240° à 10 nœuds
     if ($vent_str == "/////KT") return "Calme";
 
-    if (preg_match("/(\d{3})(\d{2})(G\d{2})?KT (\d{3})V(\d{3})/", $vent_str, $matches)) {
+    if (preg_match("/(\d{3})(\d{2})(G\d{2})?KT ((\d{3})V(\d{3}))?/", $vent_str, $matches)) {
         if($matches[1]=="VRB"){
             $direction="Variable";
         } else {
