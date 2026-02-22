@@ -148,8 +148,9 @@ function transformeVent($vent_str){
         <div class="metar-box">
             <?php echo $metar_brut; ?>
         </div>
-        <?php if($info){
-            //Si il y a des infos on affiche sinon non 
+        <?php 
+            //Si il y a des infos on les affiche sinon non 
+            if($info != 1) {
             echo'
             <h3>Informations :</h3>
             <div class="metar-box">
@@ -158,7 +159,7 @@ function transformeVent($vent_str){
                 <?php echo "Vent : $vent"; ?>
                 <?php echo "Température : $temp"; ?>
             </div>';
-        }
+            }
         ?>
         
         <?php endif; ?>
