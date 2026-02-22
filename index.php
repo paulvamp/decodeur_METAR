@@ -33,7 +33,7 @@ if (isset($_POST['oaci'])) {
 }
 
 
-function analyserMETAR(metar){
+function analyserMETAR($metar){
     //Analyser le METAR et retourner une description lisible
     //Cette fonction est un exemple très basique et ne couvre pas tous les cas possibles
     $result = "";
