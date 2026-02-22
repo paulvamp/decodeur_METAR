@@ -152,7 +152,10 @@ function transformeVent($vent_str){
             echo'
             <h3>Informations :</h3>
             <div class="metar-box">
-                <?php echo $info; ?>
+                <?php echo "Aéroport : $aeroport"; ?>
+                <?php echo "Date : $date"; ?>
+                <?php echo "Vent : $vent"; ?>
+                <?php echo "Température : $temp"; ?>
             </div>';
         }
         ?>
