@@ -190,31 +190,30 @@ function transformeVent($vent_str){
     //Exemple de transformation du vent du METAR
     //24010KT -> Vent de 240° à 10 nœuds
     if ($vent_str == "/////KT") return "Calme";
-
+    $dephasage=0;
     global $V;
-    if (preg_match("/(\d{3})(\d{2})(G\d{2})?KT (\d{3})?V?(\d{3})?/", $vent_str, $matches)) {
+    if (preg_match("/([0-9]{3}|VRB)(\d{2})(G\d{2})?KT\s?((\d{3})V(\d{3}))?/", $vent_str, $matches)) {
         if($matches[1]=="VRB"){
             $direction="Variable";
         } else {
             $direction = $matches[1];
         }
-        $direction = $matches[1];
-        $vitesse = $matches[2];
+        
+        $vitesse = intval($matches[2]);
         $vitesse_kmh = round($vitesse * 1.852);
         if(!empty($matches[3])){
             $rafale = str_replace('G', '', $matches[3]);
-            $dephasage=1;
         }
         $V=0;
-        if(!empty($matches[3+$dephasage]) && !empty($matches[4+$dephasage])){
-            $direction_min= $matches[4+$dephasage];
-            $direction_max=$matches[5+$dephasage]; 
-            $V=1; // Il y a du vent variable
-            $varia = "Vent variable entre $direction_min ° et $direction_max °";
+        if (!empty($matches[5]) && !empty($matches[6])) {
+            $direction_min= $matches[5];
+            $direction_max=$matches[6]; 
+            $varia_txt = "<br>Vent variable entre {$matches[5]}° et {$matches[6]}°";
+            $V=1;
         }
-        return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)".(!empty($matches[3]) ? " (rafale: $rafale noeuds)" : "").(!empty($matches[3+$dephasage]) && !empty($matches[4+$dephasage]) ? "<br> $varia" : "");
+        return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)".(!empty($matches[3]) ? " (rafale: $rafale noeuds)" : "").(!empty($matches[5]) && !empty($matches[6]) ? $varia_txt : "");
     }
-    return "Vent inconnu";
+    return "Vent inconnu (Brut: $vent_str)";
 }
 
 
