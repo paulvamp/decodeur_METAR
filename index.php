@@ -25,7 +25,8 @@ if (isset($_POST['oaci'])) {
             $error = "Impossible de trouver la météo pour le code $oaci.";
         }
     } else {
-        $error = "Veuillez entrer un code OACI valide (ex: LFPG).";
+        $error = "On choisi un autre aéroport";
+        $metar_brut = getNearestMetar($oaci);
     }
 
     
@@ -50,11 +51,11 @@ function analyserMETAR($metar){
     $temp = recupTemperature($metar);
 
 
-    echo'<h3>Informations :</h3> <div class="metar-box">';
-        echo "Aéroport : $aeroport";
-        echo "Date : $date";
-        echo "Vent : $vent";
-        echo "Température : $temp";
+    echo'<h3>Informations :</h3> <div class="info-box">';
+        echo "Aéroport : $aeroport \n";
+        echo "Date : $date \n";
+        echo "Vent : $vent \n";
+        echo "Température : $temp \n";
     echo '</div>';
 
 
@@ -73,7 +74,7 @@ function recupTemperature($metar){
         $dewpoint = str_replace('M', '-', $matches[2]);
         $temp = intval($temp);
         $dewpoint = intval($dewpoint);
-        $result .= "Température: $temp °C, Point de rosée: $dewpoint °C\n";
+        $result .= "Température: $temp °C \nPoint de rosée: $dewpoint °C\n";
     }
     //Ajouter d'autres analyses pour le vent, la visibilité, etc.
     return nl2br($result);
@@ -96,15 +97,38 @@ function transformeDate($date_str){
 function transformeVent($vent_str){
     //Exemple de transformation du vent du METAR
     //24010KT -> Vent de 240° à 10 nœuds
+    if ($vent_str == "00000KT") return "Calme";
+
     if (preg_match("/(\d{3})(\d{2})KT/", $vent_str, $matches)) {
         $direction = $matches[1];
         $vitesse = $matches[2];
-        return "Vent de $direction ° à $vitesse nœuds";
+        return "Vent de $direction ° à $vitesse noeuds";
     }
     return "Vent inconnu";
 }
 
+function getNearestMetar($oaci_entre) {
+    $apiKey = "6f75e109795d4e32a08b4cb142cec532";
+    $url = "https://api.checkwx.com/metar/" . $oaci_entre . "/nearest";
 
+    $opts = [
+        "http" => [
+            "method" => "GET",
+            "header" => "X-API-Key: $apiKey\r\n"
+        ]
+    ];
+
+    $context = stream_context_create($opts);
+    $response = @file_get_contents($url, false, $context);
+
+    if ($response) {
+        $data = json_decode($response, true);
+        if (isset($data['data'][0])) {
+            return $data['data'][0]; // Retourne le METAR complet de la station la plus proche
+        }
+    }
+    return false;
+}
 
 
 
@@ -130,7 +154,8 @@ function transformeVent($vent_str){
         .container { max-width: 600px; margin: auto; background: #1e1e1e; padding: 20px; border-radius: 8px; }
         input { padding: 10px; border-radius: 4px; border: none; width: 150px; }
         button { padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        .metar-box { background: #000; color: #0044ff; padding: 15px; font-family: monospace; border-left: 4px solid #007bff; margin-top: 20px; }
+        .metar-box { background: #000; color: #00ff44bc; padding: 15px; font-family: monospace; border-left: 4px solid #007bff; margin-top: 20px; }
+        .info-box { background: #000; color: #fbff00cd; padding: 15px; font-family: monospace; border-left: 4px solid #007bff; margin-top: 20px; }
         .error { color: #ff6b6b; margin-top: 10px; }
     </style>
 </head>
