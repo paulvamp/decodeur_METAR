@@ -17,7 +17,7 @@ if (isset($_POST['oaci'])) {
             $lines = explode("\n", trim($raw_data));
             if (isset($lines[1])) {
                 $metar_brut = $lines[1];
-                $info=analyserMETAR($metar_brut);
+                //analyserMETAR($metar_brut);
             } else {
                 $error = "Format de fichier invalide pour $oaci.";
             }
@@ -28,7 +28,6 @@ if (isset($_POST['oaci'])) {
         $error = "Veuillez entrer un code OACI valide (ex: LFPG).";
     }
 
-    analyserMETAR($metar_brut);
     
 }
 
@@ -51,9 +50,14 @@ function analyserMETAR($metar){
     $temp = recupTemperature($metar);
 
 
+    echo'<h3>Informations :</h3> <div class="metar-box">';
+        echo "Aéroport : $aeroport";
+        echo "Date : $date";
+        echo "Vent : $vent";
+        echo "Température : $temp";
+    echo '</div>';
 
 
-    return 1; 
 
 
 
@@ -126,7 +130,7 @@ function transformeVent($vent_str){
         .container { max-width: 600px; margin: auto; background: #1e1e1e; padding: 20px; border-radius: 8px; }
         input { padding: 10px; border-radius: 4px; border: none; width: 150px; }
         button { padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        .metar-box { background: #000; color: #00ff00; padding: 15px; font-family: monospace; border-left: 4px solid #007bff; margin-top: 20px; }
+        .metar-box { background: #000; color: #0044ff; padding: 15px; font-family: monospace; border-left: 4px solid #007bff; margin-top: 20px; }
         .error { color: #ff6b6b; margin-top: 10px; }
     </style>
 </head>
@@ -149,17 +153,8 @@ function transformeVent($vent_str){
             <?php echo $metar_brut; ?>
         </div>
         <?php 
-            if($info==1){
-                //Si il y a des infos on les affiche sinon non 
-                echo'
-                <h3>Informations :</h3>
-                <div class="metar-box">';
-                    echo "Aéroport : $aeroport";
-                    echo "Date : $date";
-                    echo "Vent : $vent";
-                    echo "Température : $temp";
-                echo '</div>';
-            }
+            //Si il y a des infos on les affiche sinon non 
+            analyserMETAR($metar_brut);
         ?>
         
         <?php endif; ?>
