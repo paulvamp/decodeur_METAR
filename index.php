@@ -122,7 +122,7 @@ function analyserMETAR($metar){
     }
     $nuages = rechercheNuages($metar);
     $visibilite=rechercheVisi($metar);
-    if(preg_match("/CAVOK/", $visibilite) || preg_match("/9999/", $visibilite)){
+    if(preg_match("/CAVOK/", $visibilite)){
         $visibilite="10 km ou plus";
         $nuages="Pas de nuages significatifs";
     }else{
@@ -131,7 +131,7 @@ function analyserMETAR($metar){
 
     $temp = recupTemperature($metar);
 
-    $pression="Non analysée (ex: Q1013 ou A2992)";
+    $pression=rechercherQNH($metar);
 
 
 
@@ -149,6 +149,7 @@ function analyserMETAR($metar){
         echo "<strong>Température :</strong> $temp <br>";
         echo "<strong>Visibilité :</strong> $visibilite<br>";
         echo "<strong>Nuages :</strong> $nuages <br>";
+        echo "<strong>QNH :</strong> $pression <br>";
     echo '</div>';
 
 }
@@ -263,6 +264,21 @@ function rechercheVisi($metar){
         return $matches[0][0];
     }
 }
+
+
+
+function rechercherQNH($metar){
+    if (preg_match_all("/Q(\d{4})/", $metar, $matches)) {
+        return $matches[0][0];
+    }
+
+
+
+
+}
+
+
+
 
 
 
