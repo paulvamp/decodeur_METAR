@@ -150,16 +150,14 @@ function transformeVent($vent_str){
         </div>
         <?php 
             //Si il y a des infos on les affiche sinon non 
-            if($info != 1) {
-                echo'
-                <h3>Informations :</h3>
-                <div class="metar-box">';
-                    echo "Aéroport : $aeroport";
-                    echo "Date : $date";
-                    echo "Vent : $vent";
-                    echo "Température : $temp";
-                echo '</div>';
-            }
+            echo'
+            <h3>Informations :</h3>
+            <div class="metar-box">';
+                echo "Aéroport : $aeroport";
+                echo "Date : $date";
+                echo "Vent : $vent";
+                echo "Température : $temp";
+            echo '</div>';
         ?>
         
         <?php endif; ?>
