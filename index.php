@@ -122,7 +122,7 @@ function analyserMETAR($metar){
     }
     $nuages = rechercheNuages($metar);
     $visibilite=rechercheVisi($metar);
-    if($visibilite=="CAVOK" || $visibilite=="9999"){
+    if(preg_match("/CAVOK/", $visibilite) || preg_match("/9999/", $visibilite)){
         $visibilite="10 km ou plus";
         $nuages="Pas de nuages significatifs";
     }else{
