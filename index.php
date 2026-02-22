@@ -51,7 +51,7 @@ function analyserMETAR($metar){
     }
     $visibilite = $mots[3+$phi];
 
-    $nuages=rechercheNuages($mots);
+    $nuages=rechercheNuages($metar);
     $temp = recupTemperature($metar);
 
 
