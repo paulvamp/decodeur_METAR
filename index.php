@@ -81,11 +81,16 @@ function analyserMETAR($metar){
 
 
     echo'<h3>Informations :</h3> <div class="info-box">';
-        echo "Aéroport : $aeroport <br>";
-        echo "Date : $date <br>";
-        echo "Vent : $vent <br>";
-        echo "Température : $temp <br>";
-        echo "Nuages : $nuages <br>";
+        echo "<strong>Aéroport :</strong> $aeroport <br>";
+        echo "<strong>Date :</strong> $date <br>";
+        echo "<strong>Vent :</strong> $vent <br>";
+        echo "<strong>Température :</strong> $temp <br>";
+        echo "<strong>Nuages :</strong> $nuages <br>";
+        if($visibilite=="9999"){
+            $visibilite="10 km ou plus";
+        }else{
+            echo "<strong>Visibilité :</strong> $visibilite km<br>";
+        }
     echo '</div>';
 
 }
@@ -114,7 +119,8 @@ function transformeDate($date_str){
         $day = $matches[1];
         $hour = $matches[2];
         $minute = $matches[3];
-        return "Le $day à $hour:$minute UTC";
+        $heure_locale = ($hour + 1) % 24; // Ajout d'une heure pour l'heure locale (simplification)
+        return "Le $day à $hour:$minute UTC ($heure_locale:$minute heure locale)";
     }
     return "Date inconnue";
 }
@@ -128,7 +134,8 @@ function transformeVent($vent_str){
     if (preg_match("/(\d{3})(\d{2})KT/", $vent_str, $matches)) {
         $direction = $matches[1];
         $vitesse = $matches[2];
-        return "Vent de $direction ° à $vitesse noeuds";
+        $vitesse_kmh = round($vitesse * 1.852);
+        return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)";
     }
     return "Vent inconnu";
 }
@@ -156,13 +163,14 @@ function rechercheNuages($metar){
         for ($i = 0; $i < count($matches[0]); $i++) {    
             $type = $matches[1][$i];
             $altitude = intval($matches[2][$i]) * 100; // Convertir en pieds
+            $result .= "<br>";
             switch ($type) {
                 case "FEW": $result .= "Quelques nuages (1-2/8) à "; break;
                 case "SCT": $result .= "Nuages épars (3-4/8) à "; break;
                 case "BKN": $result .= "Ciel couvert (5-7/8) à "; break;
                 case "OVC": $result .= "Ciel complètement couvert (8/8) à "; break;
             }
-            $result .= "$altitude pieds <br>";
+            $result .= "$altitude pieds";
         }
         return nl2br($result);
     }
