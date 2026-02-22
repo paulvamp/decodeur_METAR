@@ -260,7 +260,7 @@ function rechercheNuages($metar){
 
 function rechercheVisi($metar){
     if (preg_match_all("/\s(CAVOK|9999|\d{4})\s/", $metar, $matches)) {
-        return $matches[0];
+        return $matches[0][0];
     }
 }
 
