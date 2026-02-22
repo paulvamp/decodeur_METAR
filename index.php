@@ -1,5 +1,6 @@
 <?php
-global $grands_aeroports = [
+
+$grands_aeroports = [
     // Nord (Hauts-de-France)
     "LFQQ" => "LFQQ - Lille Lesquin",
     "LFAC" => "LFAC - Calais Dunkerque",
@@ -93,7 +94,29 @@ function analyserMETAR($metar){
 
 
 
-
+    $grands_aeroports = [
+        // Nord (Hauts-de-France)
+        "LFQQ" => "LFQQ - Lille Lesquin",
+        "LFAC" => "LFAC - Calais Dunkerque",
+        "LFBK" => "LFBK - Saint-Quentin Roupy",
+        // Grandes Villes & Hubs
+        "LFPG" => "LFPG - Paris Charles de Gaulle",
+        "LFPO" => "LFPO - Paris Orly",
+        "LFPB" => "LFPB - Le Bourget",
+        "LFMN" => "LFMN - Nice Côte d'Azur",
+        "LFLL" => "LFLL - Lyon Saint-Exupéry",
+        "LFML" => "LFML - Marseille Provence",
+        "LFBO" => "LFBO - Toulouse Blagnac",
+        "LFBD" => "LFBD - Bordeaux Mérignac",
+        "LFRS" => "LFRS - Nantes Atlantique",
+        "LFST" => "LFST - Strasbourg Entzheim",
+        "LFMT" => "LFMT - Montpellier Méditerranée",
+        // Capitales proches
+        "EBBR" => "EBBR - Bruxelles National",
+        "LSGG" => "LSGG - Genève Cointrin",
+        "EGLL" => "EGLL - Londres Heathrow",
+        "LEMD" => "LEMD - Madrid Barajas"
+    ];
 
     echo'<h3>Informations :</h3> <div class="info-box">';
         if($auto){
