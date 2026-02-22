@@ -1,34 +1,52 @@
 <?php
-// On initialise les variables pour éviter les erreurs d'affichage
+$grands_aeroports = [
+    // Nord (Hauts-de-France)
+    "LFQQ" => "Lille Lesquin",
+    "LFAC" => "Calais Dunkerque",
+    "LFBK" => "Saint-Quentin Roupy",
+    // Grandes Villes & Hubs
+    "LFPG" => "Paris Charles de Gaulle",
+    "LFPO" => "Paris Orly",
+    "LFPB" => "Le Bourget",
+    "LFMN" => "Nice Côte d'Azur",
+    "LFLL" => "Lyon Saint-Exupéry",
+    "LFML" => "Marseille Provence",
+    "LFBO" => "Toulouse Blagnac",
+    "LFBD" => "Bordeaux Mérignac",
+    "LFRS" => "Nantes Atlantique",
+    "LFST" => "Strasbourg Entzheim",
+    "LFMT" => "Montpellier Méditerranée",
+    // Capitales proches
+    "EBBR" => "Bruxelles National",
+    "LSGG" => "Genève Cointrin",
+    "EGLL" => "Londres Heathrow",
+    "LEMD" => "Madrid Barajas"
+];
+
 $metar_brut = "";
 $error = "";
 
 if (isset($_POST['oaci'])) {
     $oaci = strtoupper(trim($_POST['oaci']));
     
-    // Validation basique (4 caractères alpha)
     if (strlen($oaci) === 4 && ctype_alpha($oaci)) {
-        $url = "https://tgftp.nws.noaa.gov/data/observations/metar/stations/{$oaci}.TXT";
-
-        // Récupération avec gestion d'erreur
+        // Optionnel : si l'utilisateur a tapé LFQL, on redirige vers LFQQ pour la NOAA
+        $station_to_fetch = ($oaci == "LFQL") ? "LFQQ" : $oaci;
+        
+        $url = "https://tgftp.nws.noaa.gov/data/observations/metar/stations/{$station_to_fetch}.TXT";
         $raw_data = @file_get_contents($url);
 
         if ($raw_data !== FALSE) {
             $lines = explode("\n", trim($raw_data));
             if (isset($lines[1])) {
                 $metar_brut = $lines[1];
-                //analyserMETAR($metar_brut);
-            } else {
-                $error = "Format de fichier invalide pour $oaci.";
             }
         } else {
-            $error = "Impossible de trouver la météo pour le code $oaci.";
+            $error = "Station météo introuvable pour $oaci.";
         }
     } else {
-        $error = "On choisi un autre aéroport";
+        $error = "Veuillez entrer un code OACI valide.";
     }
-
-    
 }
 
 function analyserMETAR($metar){
@@ -121,15 +139,28 @@ function rechercheNuages($metar){
     //FEW020 -> Quelques nuages à 2000 pieds
     $result = "";
     if (preg_match_all("/(FEW|SCT|BKN|OVC)(\d{3})/", $metar, $matches)) {
-        print_r($matches);
+        //print_r($matches);
+        /*
+        Array(
+            [0] => Array(
+                [0] => OVC012
+            )
+            [1] => Array(
+                [0] => OVC
+            )
+            [2] => Array(
+                [0] => 012
+            )
+        )
+        */
         for ($i = 0; $i < count($matches[0]); $i++) {    
-            $type = $matches[1][0];
-            $altitude = $matches[2][0] * 100; // Convertir en pieds
+            $type = $matches[1][$i];
+            $altitude = intval($matches[2][$i]) * 100; // Convertir en pieds
             switch ($type) {
-                case "FEW": $result .= "Quelques nuages à "; break;
-                case "SCT": $result .= "Nuages épars à "; break;
-                case "BKN": $result .= "Ciel couvert à "; break;
-                case "OVC": $result .= "Ciel complètement couvert à "; break;
+                case "FEW": $result .= "Quelques nuages (1-2/8) à "; break;
+                case "SCT": $result .= "Nuages épars (3-4/8) à "; break;
+                case "BKN": $result .= "Ciel couvert (5-7/8) à "; break;
+                case "OVC": $result .= "Ciel complètement couvert (8/8) à "; break;
             }
             $result .= "$altitude pieds <br>";
         }
@@ -140,24 +171,11 @@ function rechercheNuages($metar){
 
 
 
-/*
-Array(
-    [0] => Array(
-        [0] => OVC012
-    )
-    [1] => Array(
-        [0] => OVC
-    )
-    [2] => Array(
-        [0] => 012
-    )
-)
 
 
 
 
 
-*/
 
 
 
@@ -172,41 +190,55 @@ Array(
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Mon Décodeur METAR</title>
+    <title>Décodeur METAR Pro</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #e0e0e0; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: #1e1e1e; padding: 20px; border-radius: 8px; }
-        input { padding: 10px; border-radius: 4px; border: none; width: 150px; }
-        button { padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        .metar-box { background: #000; color: #00ff44bc; padding: 15px; font-family: monospace; border-left: 4px solid #007bff; margin-top: 20px; }
-        .info-box { background: #000; color: #fbff00cd; padding: 15px; font-family: monospace; border-left: 4px solid #007bff; margin-top: 20px; }
-        .error { color: #ff6b6b; margin-top: 10px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: #1e1e1e; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        input { padding: 12px; border-radius: 6px; border: 1px solid #333; width: 200px; background: #2c2c2c; color: white; }
+        button { padding: 12px 20px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0056b3; }
+        .metar-box { background: #000; color: #00ff44; padding: 15px; font-family: 'Courier New', monospace; border-left: 4px solid #007bff; margin-top: 20px; }
+        .info-box { background: #1a1a1a; color: #fbff00; padding: 15px; border-radius: 6px; border: 1px solid #333; margin-top: 15px; line-height: 1.6; }
+        .error { color: #ff6b6b; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Décodeur METAR</h1>
+    <h1>✈️ Décodeur METAR</h1>
+    
     <form method="post">
-        <input type="text" name="oaci" placeholder="Ex: LFPG" maxlength="4" required>
-        <button type="submit">Récupérer</button>
+        <input 
+            type="text" 
+            name="oaci" 
+            placeholder="Ex: LF..." 
+            maxlength="4" 
+            list="liste-oaci" 
+            required 
+            autocomplete="off"
+            value="<?php echo isset($oaci) ? $oaci : ''; ?>"
+        >
+        
+        <datalist id="liste-oaci">
+            <?php foreach ($grands_aeroports as $code => $nom): ?>
+                <option value="<?php echo $code; ?>"><?php echo $nom; ?></option>
+            <?php endforeach; ?>
+        </datalist>
+        
+        <button type="submit">Décoder</button>
     </form>
 
     <?php if ($error): ?>
-        <p class="error"><?php echo $error; ?></p>
+        <p class="error">❌ <?php echo $error; ?></p>
     <?php endif; ?>
 
     <?php if ($metar_brut): ?>
-        <h3>METAR :</h3>
         <div class="metar-box">
+            <strong>BRUT :</strong><br>
             <?php echo $metar_brut; ?>
         </div>
-        <?php 
-            //Si il y a des infos on les affiche sinon non 
-            analyserMETAR($metar_brut);
-        ?>
-        
-        <?php endif; ?>
+        <?php analyserMETAR($metar_brut); ?>
+    <?php endif; ?>
 </div>
 
 </body>
