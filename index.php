@@ -63,12 +63,11 @@ function analyserMETAR($metar){
     $date = transformeDate($mots[1]);
     if($mots[2]!="AUTO"){
         $vent = transformeVent($mots[2]);
-        $phi=1;
     } else {
         $vent = transformeVent($mots[3]);
+        $phi=1;
     }
     $visibilite = $mots[3+$phi];
-
     $nuages=rechercheNuages($metar);
     $temp = recupTemperature($metar);
 
@@ -85,12 +84,12 @@ function analyserMETAR($metar){
         echo "<strong>Date :</strong> $date <br>";
         echo "<strong>Vent :</strong> $vent <br>";
         echo "<strong>Température :</strong> $temp <br>";
-        echo "<strong>Nuages :</strong> $nuages <br>";
         if($visibilite=="9999"){
             $visibilite="10 km ou plus";
         }else{
             echo "<strong>Visibilité :</strong> $visibilite km<br>";
         }
+        echo "<strong>Nuages :</strong> $nuages <br>";
     echo '</div>';
 
 }
@@ -105,7 +104,7 @@ function recupTemperature($metar){
         $dewpoint = str_replace('M', '-', $matches[2]);
         $temp = intval($temp);
         $dewpoint = intval($dewpoint);
-        $result .= "Température: $temp °C \nPoint de rosée: $dewpoint °C\n";
+        $result .= "Température: $temp °C \n<strong>Point de rosée </strong>: $dewpoint °C\n";
     }
     //Ajouter d'autres analyses pour le vent, la visibilité, etc.
     return nl2br($result);
