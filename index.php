@@ -135,10 +135,6 @@ function analyserMETAR($metar){
 
 
 
-
-
-
-
     echo'<h3>Informations :</h3> <div class="info-box">';
         if($auto){
             echo "Automatique<br>";
@@ -148,8 +144,8 @@ function analyserMETAR($metar){
         echo "<strong>Vent :</strong> $vent <br>";
         echo "<strong>Température :</strong> $temp <br>";
         echo "<strong>Visibilité :</strong> $visibilite<br>";
-        echo "<strong>Nuages :</strong> $nuages <br>";
         echo "<strong>QNH :</strong> $pression <br>";
+        echo "<strong>Nuages :</strong> $nuages <br>";
     echo '</div>';
 
 }
@@ -271,10 +267,6 @@ function rechercherQNH($metar){
     if (preg_match_all("/Q(\d{4})/", $metar, $matches)) {
         return str_replace('Q', '', $matches[0][0]);
     }
-
-
-
-
 }
 
 
