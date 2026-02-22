@@ -64,14 +64,18 @@ function analyserMETAR($metar){
     $auto=0;
     if($mots[2]!="AUTO"){
         $vent = transformeVent($mots[2]);
-        $auto=1; 
+        if($V){
+            $phi=1;
+        }
     } else {
         $vent = transformeVent($mots[3]);
+        $auto=1; 
         $phi=1;
     }
     $visibilite = intval($mots[3+$phi]);
-    $nuages=rechercheNuages($metar);
+    $nuages = rechercheNuages($metar);
     $temp = recupTemperature($metar);
+
     $pression="Non analysée (ex: Q1013 ou A2992)";
 
 
@@ -85,7 +89,7 @@ function analyserMETAR($metar){
         if($auto){
             echo "Automatique<br>";
         }
-        echo "<strong>Aéroport :</strong> $aeroport <br>";
+        echo "<strong>Aéroport :</strong> $aeroport (".($grands_aeroports[$aeroport] ?? "Inconnu").")<br>";
         echo "<strong>Date :</strong> $date <br>";
         echo "<strong>Vent :</strong> $vent <br>";
         echo "<strong>Température :</strong> $temp <br>";
@@ -149,6 +153,7 @@ function transformeVent($vent_str){
         if(!empty($matches[4]) && !empty($matches[5])){
             $direction_min= $matches[4];
             $direction_max=$matches[5]; 
+            $V=1;
             $direction = "Variable entre $direction_min° et $direction_max°";
         }
         return "$direction ° à $vitesse noeuds ($vitesse_kmh km/h)".(!empty($matches[3]) ? " (rafale: $rafale noeuds)" : "").(!empty($matches[5]) && !empty($matches[4]) ? "<br> Vent variable du $direction_min ° au $direction_max °" : "");
