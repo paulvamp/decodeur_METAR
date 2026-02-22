@@ -28,7 +28,7 @@ if (isset($_POST['oaci'])) {
         $error = "Veuillez entrer un code OACI valide (ex: LFPG).";
     }
 
-
+    analyserMETAR($metar_brut);
     
 }
 
@@ -149,15 +149,17 @@ function transformeVent($vent_str){
             <?php echo $metar_brut; ?>
         </div>
         <?php 
-            //Si il y a des infos on les affiche sinon non 
-            echo'
-            <h3>Informations :</h3>
-            <div class="metar-box">';
-                echo "Aéroport : $aeroport";
-                echo "Date : $date";
-                echo "Vent : $vent";
-                echo "Température : $temp";
-            echo '</div>';
+            if($info==1){
+                //Si il y a des infos on les affiche sinon non 
+                echo'
+                <h3>Informations :</h3>
+                <div class="metar-box">';
+                    echo "Aéroport : $aeroport";
+                    echo "Date : $date";
+                    echo "Vent : $vent";
+                    echo "Température : $temp";
+                echo '</div>';
+            }
         ?>
         
         <?php endif; ?>
