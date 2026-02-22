@@ -63,20 +63,26 @@ function analyserMETAR($metar){
     $date = transformeDate($mots[1]);
     $auto=0;
     if($mots[2]!="AUTO"){
-        die($mots[2]);
-        $vent = transformeVent($mots[2]);
-        if($V){
+        //die($mots[2]);
+        //On verifie si après il y a du vent variable 
+        if(isset($mots[3]) && preg_match("/(\d{3})V(\d{3})/", $mots[3])){
+            $vent = transformeVent($mots[2]." ".$mots[3]);
             $phi+=1;
+        } else {
+            $vent = transformeVent($mots[2]);
         }
+        //$vent = transformeVent($mots[2]);
     } else {
-        $vent = transformeVent($mots[3]);
-        if($V){
+        //$vent = transformeVent($mots[3]);
+        if(isset($mots[4]) && preg_match("/(\d{3})V(\d{3})/", $mots[4])){
+            $vent = transformeVent($mots[3]." ".$mots[4]);
             $phi+=1;
+        } else {
+            $vent = transformeVent($mots[3]);
         }
         $auto=1; 
-        $phi+=1;
     }
-    $visibilite = intval($mots[3+$phi]);
+    $visibilite = intval($mots[3+$phi+$auto]);
     $nuages = rechercheNuages($metar);
     $temp = recupTemperature($metar);
 
