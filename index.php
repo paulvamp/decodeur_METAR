@@ -35,6 +35,7 @@ function analyserMETAR($metar){
     //Analyser le METAR et retourner une description lisible
     //Cette fonction est un exemple très basique et ne couvre pas tous les cas possibles
     $mots = explode(" ", $metar);
+    $phi=0; //Dephasage si il y a "AUTO" ou pas dans le METAR
     // Résultat :
     // $mots[0] est "LFPG"
     // $mots[1] est "221300Z"
@@ -49,6 +50,7 @@ function analyserMETAR($metar){
         $vent = transformeVent($mots[3]);
     }
     $visibilite = $mots[3+$phi];
+
     $nuages=rechercheNuages($mots);
     $temp = recupTemperature($metar);
 
