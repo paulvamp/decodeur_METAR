@@ -40,7 +40,7 @@ function analyserMETAR($metar){
     // $mots[0] est "LFPG"
     // $mots[1] est "221300Z"
     // $mots[2] est "24010KT"
-    die($metar);
+    //die($metar);
     $aeroport = $mots[0];
     $date = transformeDate($mots[1]);
     if($mots[2]!="AUTO"){
