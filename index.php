@@ -52,10 +52,10 @@ function analyserMETAR($metar){
 
 
 
+    return 1; 
 
 
 
-    
 }
 
 
@@ -94,7 +94,7 @@ function transformeVent($vent_str){
     if (preg_match("/(\d{3})(\d{2})KT/", $vent_str, $matches)) {
         $direction = $matches[1];
         $vitesse = $matches[2];
-        return "Vent de $direction° à $vitesse nœuds";
+        return "Vent de $direction ° à $vitesse nœuds";
     }
     return "Vent inconnu";
 }
@@ -147,7 +147,7 @@ function transformeVent($vent_str){
         <div class="metar-box">
             <?php echo $metar_brut; ?>
         </div>
-        <?php if($info!=""){
+        <?php if($info){
             //Si il y a des infos on affiche sinon non 
             echo'
             <h3>Informations :</h3>
