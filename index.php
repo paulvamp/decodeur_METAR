@@ -125,7 +125,7 @@ function analyserMETAR($metar){
         $visibilite="10 km ou plus";
         $nuages="Pas de nuages significatifs";
     }else{
-        die($mots[3+$phi+$auto]);
+        //die($mots[3+$phi+$auto]);
         $visibilite = intval($mots[3+$phi+$auto]);
     }
     $temp = recupTemperature($metar);
