@@ -192,7 +192,7 @@ function transformeVent($vent_str){
     if ($vent_str == "/////KT") return "Calme";
 
     global $V;
-    if (preg_match("/(\d{3})(\d{2})(G\d{2})?KT ((\d{3}))?V?((\d{3}))?/", $vent_str, $matches)) {
+    if (preg_match("/(\d{3})(\d{2})(G\d{2})?KT (\d{3})?V?(\d{3})?/", $vent_str, $matches)) {
         if($matches[1]=="VRB"){
             $direction="Variable";
         } else {
