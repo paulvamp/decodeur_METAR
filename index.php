@@ -83,8 +83,13 @@ function analyserMETAR($metar){
         }
         $auto=1; 
     }
-    $visibilite = intval($mots[3+$phi+$auto]);
     $nuages = rechercheNuages($metar);
+    if($mots[3+$phi+$auto]=="CAVOK"){
+        $visibilite="10 km ou plus";
+        $nuages="Pas de nuages significatifs";
+    }else{
+        $visibilite = intval($mots[3+$phi+$auto]);
+    }
     $temp = recupTemperature($metar);
 
     $pression="Non analysée (ex: Q1013 ou A2992)";
@@ -96,26 +101,26 @@ function analyserMETAR($metar){
 
     $grands_aeroports = [
         // Nord (Hauts-de-France)
-        "LFQQ" => "LFQQ - Lille Lesquin",
-        "LFAC" => "LFAC - Calais Dunkerque",
-        "LFBK" => "LFBK - Saint-Quentin Roupy",
+        "LFQQ" => "Lille Lesquin",
+        "LFAC" => "Calais Dunkerque",
+        "LFBK" => "Saint-Quentin Roupy",
         // Grandes Villes & Hubs
-        "LFPG" => "LFPG - Paris Charles de Gaulle",
-        "LFPO" => "LFPO - Paris Orly",
-        "LFPB" => "LFPB - Le Bourget",
-        "LFMN" => "LFMN - Nice Côte d'Azur",
-        "LFLL" => "LFLL - Lyon Saint-Exupéry",
-        "LFML" => "LFML - Marseille Provence",
-        "LFBO" => "LFBO - Toulouse Blagnac",
-        "LFBD" => "LFBD - Bordeaux Mérignac",
-        "LFRS" => "LFRS - Nantes Atlantique",
-        "LFST" => "LFST - Strasbourg Entzheim",
-        "LFMT" => "LFMT - Montpellier Méditerranée",
+        "LFPG" => "Paris Charles de Gaulle",
+        "LFPO" => "Paris Orly",
+        "LFPB" => "Le Bourget",
+        "LFMN" => "Nice Côte d'Azur",
+        "LFLL" => "Lyon Saint-Exupéry",
+        "LFML" => "Marseille Provence",
+        "LFBO" => "Toulouse Blagnac",
+        "LFBD" => "Bordeaux Mérignac",
+        "LFRS" => "Nantes Atlantique",
+        "LFST" => "Strasbourg Entzheim",
+        "LFMT" => "Montpellier Méditerranée",
         // Capitales proches
-        "EBBR" => "EBBR - Bruxelles National",
-        "LSGG" => "LSGG - Genève Cointrin",
-        "EGLL" => "EGLL - Londres Heathrow",
-        "LEMD" => "LEMD - Madrid Barajas"
+        "EBBR" => "Bruxelles National",
+        "LSGG" => "Genève Cointrin",
+        "EGLL" => "Londres Heathrow",
+        "LEMD" => "Madrid Barajas"
     ];
 
     echo'<h3>Informations :</h3> <div class="info-box">';
@@ -145,7 +150,7 @@ function recupTemperature($metar){
         $dewpoint = str_replace('M', '-', $matches[2]);
         $temp = intval($temp);
         $dewpoint = intval($dewpoint);
-        $result .= "Température: $temp °C \n<strong>Point de rosée </strong>: $dewpoint °C";
+        $result .= "$temp °C \n<strong>Point de rosée </strong>: $dewpoint °C";
     }
     //Ajouter d'autres analyses pour le vent, la visibilité, etc.
     return nl2br($result);
@@ -172,7 +177,7 @@ function transformeVent($vent_str){
     if ($vent_str == "/////KT") return "Calme";
 
     global $V;
-    if (preg_match("/(\d{3})(\d{2})(G\d{2})?KT ((\d{3})V(\d{3}))?/", $vent_str, $matches)) {
+    if (preg_match("/(\d{3})(\d{2})(G\d{2})?KT (\d{3})V(\d{3})?/", $vent_str, $matches)) {
         if($matches[1]=="VRB"){
             $direction="Variable";
         } else {
