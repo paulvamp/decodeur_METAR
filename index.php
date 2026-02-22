@@ -123,8 +123,8 @@ function rechercheNuages($metar){
     if (preg_match_all("/(FEW|SCT|BKN|OVC)(\d{3})/", $metar, $matches)) {
         print_r($matches);
         for ($i = 0; $i < count($matches[0]); $i++) {    
-            $type = $matches[1][$i];
-            $altitude = $matches[2][$i] * 100; // Convertir en pieds
+            $type = $matches[1][0];
+            $altitude = $matches[2][0] * 100; // Convertir en pieds
             switch ($type) {
                 case "FEW": $result .= "Quelques nuages à "; break;
                 case "SCT": $result .= "Nuages épars à "; break;
@@ -135,11 +135,29 @@ function rechercheNuages($metar){
         }
         return nl2br($result);
     }
+    return "Pas de nuages significatifs";
 }
 
 
 
+/*
+Array(
+    [0] => Array(
+        [0] => OVC012
+    )
+    [1] => Array(
+        [0] => OVC
+    )
+    [2] => Array(
+        [0] => 012
+    )
+)
 
+
+
+
+
+*/
 
 
 
